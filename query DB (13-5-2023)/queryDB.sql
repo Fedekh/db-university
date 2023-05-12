@@ -8,12 +8,17 @@ LIKE '1990%';
 
 2. Selezionare tutti i corsi che valgono più di 10 crediti (479)
 
-SELECT `name`, `cfu`
+SELECT `name`, `cfu` , `description`
 FROM `courses`
 WHERE `cfu` > 10;
 
 
 3. Selezionare tutti gli studenti che hanno più di 30 anni
+
+SELECT * 
+FROM `students` 
+WHERE date_of_birth <= DATE_SUB(CURRENT_DATE(), INTERVAL 30 YEAR);
+(ho considerato 30 anni compresi)
 
 
 4. Selezionare tutti i corsi del primo semestre del primo anno di un qualsiasi corso di laurea (286)
@@ -25,7 +30,7 @@ WHERE `year` = 1 AND `period` = 'I semestre';
 
 5. Selezionare tutti gli appelli d esame che avvengono nel pomeriggio (dopo le 14) del 20/06/2020 (21)
 
-SELECT `course_id`
+SELECT `course_id`, `location` , `date`
 FROM `exams`
 WHERE `hour` > "14%" 
 AND `date` = "2020-06-20";
@@ -33,19 +38,19 @@ AND `date` = "2020-06-20";
 
 6. Selezionare tutti i corsi di laurea magistrale (38)
 
-SELECT `name`, `level`
+SELECT `name`, `level` , `website`
 FROM `degrees` 
 WHERE `level` = "magistrale";
 
 
 7. Da quanti dipartimenti è composta l università? (12)
 
-SELECT COUNT(`name`) AS 'numero di dipartimenti totali'
+SELECT COUNT(`name`) AS 'Numero di dipartimenti totali'
 FROM `departments`;
 
 
 8. Quanti sono gli insegnanti che non hanno un numero di telefono? (50)
 
-SELECT COUNT(`name`) AS 'numero di insegnanti senza numero di telefono'
+SELECT COUNT(`name`) AS 'Numero di insegnanti senza numero di telefono'
 FROM `teachers`
 WHERE `phone` IS NULL;
