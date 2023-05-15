@@ -1,5 +1,11 @@
 1. Selezionare tutti gli studenti iscritti al Corso di Laurea in Economia
 
+SELECT `degrees`.`id`, `students`.`name`, `students`.`surname`,`degrees`.`name`
+FROM `degrees`
+JOIN `students`
+ON `degrees`.`id` = `students`.`degree_id`
+WHERE `degrees`.`name` = 'Corso di Laurea in Economia';
+-- aggiungo l'id per dare una sorta di ordine
 
 2. Selezionare tutti i Corsi di Laurea Magistrale del Dipartimento di Neuroscienze
 
