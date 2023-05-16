@@ -11,23 +11,25 @@ WHERE `degrees`.`name` = 'Corso di Laurea in Economia';
 
 2. Selezionare tutti i Corsi di Laurea Magistrale del Dipartimento di Neuroscienze
 
-SELECT `departments`.`id`,`degrees`.`name`,`departments`.`name`
+SELECT `departments`.`id`,`degrees`.`name`,`departments`.`name`,`degrees`.`level`
 FROM `departments`
 JOIN `degrees`
 ON `departments`.`id` =`degrees`.`department_id`
 WHERE `departments`.`name` LIKE 'Dipartimento di Neuroscienze%'
+AND `degrees`.`level` = 'magistrale';
 
 
 
 3. Selezionare tutti i corsi in cui insegna Fulvio Amato (id=44)
 
-SELECT `teachers`.`name`, `teachers`.`surname` , `courses`.`name`
+SELECT `teachers`.`id`, `teachers`.`name`, `teachers`.`surname` , `courses`.`name` AS `course_name`
 FROM `courses`
 JOIN `course_teacher`
 ON  `courses`.`id`=`course_teacher`.`course_id`
 JOIN `teachers`
 ON `course_teacher`.`teacher_id` = `teachers`.`id`
-WHERE `course_teacher`.`teacher_id` = 44
+WHERE `teachers`.`name` = 'Fulvio'
+AND `teachers`.`surname` = 'Amato';
 
 
 4. Selezionare tutti gli studenti con i dati relativi al corso di laurea a cui sono iscritti e il
@@ -44,7 +46,7 @@ ORDER BY `students`.`surname` ASC, `students`.`name` ASC;
 
 5. Selezionare tutti i corsi di laurea con i relativi corsi e insegnanti
 
-SELECT `degrees`.`name`, `courses`.`name`, `teachers`.`name`, `teachers`.`surname`
+SELECT `degrees`.`name` AS `degree_name` , `courses`.`name` AS `course_name` , `teachers`.`name`, `teachers`.`surname`
 FROM `course_teacher`
 JOIN `teachers`
 ON `course_teacher`.`teacher_id` = `teachers`.`id`
@@ -56,7 +58,7 @@ ON `courses`.`degree_id` = `degrees`.`id`
 
 
 6. Selezionare tutti i docenti che insegnano nel Dipartimento di Matematica (54) 
-SELECT DISTINCT `teachers`.`name` AS `teacher_name` , `teachers`.`surname` AS `teacher_surname`, `departments`.`name`
+SELECT DISTINCT `teachers`.`name` AS `teacher_name` , `teachers`.`surname` AS `teacher_surname`, `departments`.`name` AS `department_name`
 FROM `departments` 
 JOIN `degrees`
 ON `departments`.`id` = `degrees`.`department_id`
@@ -72,7 +74,7 @@ WHERE `departments`.`name` = 'Dipartimento di Matematica';
 7. BONUS: Selezionare per ogni studente quanti tentativi d’esame ha sostenuto per
 superare ciascuno dei suoi esami
 
-SELECT `students`.`surname`, `students`.`name`,(SELECT COUNT(*) FROM `exam_student` WHERE `student_id` = `students`.`id` AND `vote` <= 17) AS `failed_attempts`, `exam_student`.`vote` >17 AS `promoted`, `courses`.`id` AS `name_exam`
+SELECT `students`.`id`, `students`.`surname` AS `student_surname`, `students`.`name`  AS `student_name`, COUNT(*) AS `failed_attempts`, MAX(`exam_student`.`vote`) AS `max_vote`
 FROM `exam_student`
 JOIN `students`
 ON `exam_student`.`student_id` = `students`.`id`
@@ -80,3 +82,5 @@ JOIN `exams`
 ON `exams`.`id`= `exam_student`.`exam_id`
 JOIN `courses`
 ON `exams`.`course_id` = `courses`.`id`
+GROUP BY `students`.`id`, `courses`.`id`
+HAVING `max_vote` >= 18
